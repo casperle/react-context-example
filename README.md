@@ -26,7 +26,7 @@ This will start webpack dev server. There is no production version of the applic
 # React context
 The application uses react context. There is implemented kind of a store system. In file `src/stores/config.js` are two functions - `mountStores` and `provideStores`.
 - `provideStores`
-  - uses react context providers imported from files from `src/stores` forlder, to wrap passed component by these providers
+  - uses react context providers imported from store files from `src/stores` forlder, to wrap passed component by these providers
   - it can be modified to accept a list of store names as an argument and use only passed stores to wrap around passed component
 - `mountStores`
-  - accepts a list of store names as a parameter and uses react context consumers to wrap them around the passed compenent
+  - accepts a list of store names as an argument and uses react context consumers to wrap them around the passed compenent
