@@ -1,62 +1,33 @@
 import React from 'react';
 
-import { FlyProvider, FlyContext } from './flyStore';
-import { SearchProvider, SearchContext } from './searchStore';
+export const withProviders = (...providers) => Component => props => {
+  const mountProviders = providersArray => {
+    if (providersArray.length) {
+      const WrapperProvider = providersArray[0];
 
-const STORE_CONSUMERS = {
-	FLY: FlyContext.Consumer,
-	SEARCH: SearchContext.Consumer,
+      return <WrapperProvider>{mountProviders(providersArray.slice(1))}</WrapperProvider>;
+    } else {
+      return <Component {...props} />;
+    }
+  };
+
+  return mountProviders(providers);
 };
 
-const STORE_PROVIDERS = [
-	FlyProvider,
-	SearchProvider,
-];
+export const withConsumers = (...consumers) => Component => props => {
+  const mountConsumers = (consumersArray, consumerProps = {}) => {
+    if (consumersArray.length) {
+      const WrapperConsumer = consumersArray[0];
 
+      return (
+        <WrapperConsumer>
+          {consumerValues => mountConsumers(consumersArray.slice(1), { ...consumerProps, ...consumerValues })}
+        </WrapperConsumer>
+      );
+    } else {
+      return <Component {...props} {...consumerProps} />;
+    }
+  };
 
-export const STORE_NAMES = {
-	FLY: 'FLY',
-	SEARCH: 'SEARCH',
-};
-
-export const mountStores = (Component, props, storeNamesArray, storeArgs = {}) => {
-  if (storeNamesArray.length && STORE_CONSUMERS[storeNamesArray[0]]) {
-		const WrapperComponent = STORE_CONSUMERS[storeNamesArray[0]];
-
-		return (
-			<WrapperComponent>
-				{
-					(args) => {
-						storeArgs = Object.assign(storeArgs, args);
-
-						return mountStores(Component, props, storeNamesArray.slice(1), storeArgs);
-					}
-				}
-			</WrapperComponent>
-		);
-  }
-  else {
-	return <Component {...props} {...storeArgs} />;
-  }
-};
-
-export const provideStores = (Component, props, stores = null) => {
-	if (stores === null) {
-		stores = STORE_PROVIDERS;
-	}
-
-	if (stores.length) {
-		const WrapperComponent = stores[0];
-
-		return (
-			<WrapperComponent>
-				{
-					provideStores(Component, props, stores.slice(1))
-				}
-			</WrapperComponent>
-		);
-	}
-	else {
-		return <Component {...props} />;
-	}
+  return mountConsumers(consumers);
 };

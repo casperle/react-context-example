@@ -4,8 +4,8 @@ import { SearchForm } from '../search-form';
 import { FlyList } from '../fly-list';
 
 export const Content = () => (
-	<React.Fragment>
-		<SearchForm />
-		<FlyList />
-	</React.Fragment>
+  <React.Fragment>
+    <SearchForm />
+    <FlyList />
+  </React.Fragment>
 );
